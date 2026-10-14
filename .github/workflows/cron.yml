@@ -1,0 +1,21 @@
+
+name: Scheduled Task
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  run-cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call scheduled API
+        env:
+          CRON_URL: ${{ secrets.CRON_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl --fail --silent --show-error \
+            --max-time 60 \
+            -X GET "$CRON_URL" \
+            -H "Authorization: Bearer $CRON_SECRET"
